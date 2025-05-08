@@ -1,0 +1,50 @@
+{# templates/user/admin/list_Admins.html.twig #}
+{% extends 'baseEntreprise.html.twig' %}
+{% block title %}Entreprise List - Autolink{% endblock %}
+{% block page_title %}Entreprise List{% endblock %}
+{% block content %}
+    <!-- List of Entreprises -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">List of Entreprises</h6>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
+                            <th>Field</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Date Creation</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entreprise in entreprises %}
+                            {# Skip the current user's enterprise #}
+                            {% if entreprise.id != app.user.id %}
+                                <tr>
+                                    <td>{{ entreprise.companyName }}</td>
+                                    <td>{{ entreprise.field }}</td>
+                                    <td>{{ entreprise.email }}</td>
+                                    <td>{{ entreprise.phone }}</td>
+                                    <td>{{ entreprise.createdAt|date('Y-m-d H:i:s') }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-primary btn-sm">Request partnership</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">No entreprises found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

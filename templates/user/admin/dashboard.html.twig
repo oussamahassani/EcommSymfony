@@ -1,0 +1,23 @@
+{# user/admin/dashboard.html.twig #}
+
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Admin Dashboard - Autolink{% endblock %}
+
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Welcome, {{ app.user.name }} {{ app.user.lastName }}!</h6>
+                </div>
+                <div class="card-body">
+                    <p>Welcome to the Admin Dashboard. Here you can manage various aspects of the Autolink platform.</p>
+                    <a href="{{ path('admin_logout') }}" class="btn btn-danger">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

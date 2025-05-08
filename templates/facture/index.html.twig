@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="product spad">
+        <div class="container">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-lg-3 col-md-5">
+                    <div class="sidebar">
+                        <!-- Search by date -->
+                        <div class="blog__sidebar__search">
+                            <form method="GET" action="{{ path('factures_index') }}">
+                                <input type="date" name="date_facture" placeholder="Rechercher par date...">
+                                <button type="submit"><span class="icon_search"></span></button>
+                            </form>
+                        </div>
+                        <!-- Show all invoices button -->
+                        <div class="blog__sidebar__button" style="margin-top: 10px;">
+                            <a href="{{ path('factures_index') }}" class="btn btn-primary">Afficher toutes mes factures</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Factures List -->
+                <div class="col-lg-9 col-md-7">
+                    <div class="product__discount">
+                        <div class="section-title product__discount__title">
+                            <h2>Vos Factures</h2>
+                        </div>
+                        <div class="row">
+                            {% if factures is empty %}
+                                <p>Aucune facture trouvée.</p>
+                            {% else %}
+                                {% for facture in factures %}
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
+                                        <div class="product__item">
+                                            <!-- Facture Image -->
+                                            <div class="product__item__pic set-bg" style="background-image: url('{{ asset('uploads/facture.jpg') }}');">
+                                                <ul class="product__item__pic__hover">
+                                                    <li>
+                                                        <button type="button" onclick="window.location.href='{{ path('facture_details', {'id': facture.id}) }}'" class="btn btn-danger">
+                                                            <i class="fa fa-eye"></i> 
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <form action="{{ path('factures_delete', {'id': facture.id}) }}" method="POST" style="display: inline;">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ facture.id) }}">
+                                                            <button type="button" class="btn btn-danger" onclick="confirmDelete(event, this)">
+                                                                <i class="fa fa-times"></i> 
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <button onclick="telechargerFacture('{{ facture.id }}')" class="btn btn-danger">
+                                                            <i class="fa fa-file-pdf"></i> 
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <!-- Facture Details -->
+                                            <div class="product__item__text">
+                                                <h6>Facture {{ facture.id }}</h6>
+                                                <p>Date de Commande: {{ facture.datetime|date('d/m/Y') }}</p>
+                                                <p>Heure : {{ facture.datetime|date('H:i') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function confirmDelete(event, button) {
+            event.preventDefault(); // Empêcher la soumission immédiate du formulaire
+
+            Swal.fire({
+                title: "Êtes-vous sûr ?",
+                text: "Cette action est irréversible !",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Oui, supprimer !",
+                cancelButtonText: "Annuler"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Soumettre le formulaire si l'utilisateur confirme
+                    button.closest("form").submit();
+                }
+           });
+        }
+        function telechargerFacture(factureId) {
+            // Rediriger vers la route de génération de PDF
+            window.location.href = `/factures/telecharger-pdf-from-json/${factureId}`;
+        }
+    </script>
+{% endblock %}

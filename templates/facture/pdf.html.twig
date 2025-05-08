@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Facture {{ facture.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        .header img {
+            max-height: 80px;
+        }
+        .header h1 {
+            color: #444;
+            font-size: 28px;
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 20px 0;
+        }
+        .invoice-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .invoice-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+        .invoice-info strong {
+            color: #333;
+        }
+        h2 {
+            font-size: 22px;
+            color: #444;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+        }
+        table th {
+            background-color: #f8f9fa;
+            color: #555;
+            font-weight: bold;
+            border-bottom: 2px solid #eee;
+        }
+        table td {
+            border-bottom: 1px solid #eee;
+        }
+        table tr:hover {
+            background-color: #f9f9f9;
+        }
+        .total {
+            text-align: right; /* Aligner le texte à gauche */
+            margin-top: 20px; /* Espacement par rapport au tableau */
+            font-size: 16px; /* Taille de la police */
+            color: #000; /* Couleur du texte en noir */
+            font-weight: bold; /* Texte en gras */
+            padding: 10px; /* Espacement interne */
+            border-top: 2px solid #eee; /* Ligne de séparation */
+        }
+        .total-amount {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="header">
+            <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo">
+            <h1>Facture</h1>
+            <div></div>
+        </div>
+        <hr>
+
+        <div class="invoice-info">
+            <div>
+                <p><strong>Date :</strong> {{ facture.date }}</p>
+                <p><strong>Client :</strong> {{ facture.client.nom }}</p>
+            </div>
+            <div>
+                <p><strong>N° Facture :</strong> {{ facture.id }}</p>
+                <p><strong>Montant total :</strong> {{ facture.montant }} dt</p>
+            </div>
+        </div>
+
+        <h2>Articles</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prix unitaire</th>
+                    <th>Quantité</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in facture.articles %}
+                    <tr>
+                        <td>{{ article.nom }}</td>
+                        <td>{{ article.prix_unitaire }} dt</td>
+                        <td>{{ article.quantite }}</td>
+                        <td>{{ article.prix_unitaire * article.quantite }} dt</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total">
+            {# Calculer la somme des totaux des produits #}
+            {% set totalProduits = 0 %}
+            {% for article in facture.articles %}
+                {% set totalProduits = totalProduits + (article.prix_unitaire * article.quantite) %}
+            {% endfor %}
+
+            {# Calculer la TVA (20%) #}
+            {% set tva = totalProduits * 0.2 %}
+
+
+            <p>Total des produits (HT) : {{ totalProduits }} dt</p>
+            <p>TVA (20%) : {{ tva }} dt</p>
+        </div>
+
+        <div class="footer">
+            <p>Merci pour votre confiance !</p>
+            <p>Pour toute question, contactez-nous à contact@contact.com</p>
+            <p>Ou Par Téléphone: +216 20 100 200</p>
+        </div>
+    </div>
+</body>
+</html>

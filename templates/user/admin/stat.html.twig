@@ -1,0 +1,280 @@
+{# templates/user/admin/stat.html.twig #}
+
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Statistiques des ventes{% endblock %}
+{% block page_title %}Statistiques{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{ currentPage == 1 ? 'active' : '' }}">
+                    <a class="page-link" href="{{ path('app_statistique', {'page': 1}) }}">Articles</a>
+                </li>
+                <li class="page-item {{ currentPage == 2 ? 'active' : '' }}">
+                    <a class="page-link" href="{{ path('app_statistique', {'page': 2}) }}">Favoris</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Contenu de la première page (Articles) -->
+        {% if currentPage == 1 %}
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-header">Répartition des quantités des produits</div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="quantityChart" class="chart-size"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-header">Nombre de ventes par produit</div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="salesChart" class="chart-size"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-header">Répartition des paiements</div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="paymentChart" class="chart-size"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-header">Produits en rupture de stock</div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="outOfStockChart" class="chart-size"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Contenu de la deuxième page (Favoris) -->
+        {% if currentPage == 2 %}
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">Favoris des clients</div>
+                        <div class="card-body">
+                            <!-- Graphique des favoris -->
+                            <div class="chart-container">
+                                <canvas id="favoriteChart" class="chart-size"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Importation de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const salesCtx = document.getElementById('salesChart')?.getContext('2d');
+            const quantityCtx = document.getElementById('quantityChart')?.getContext('2d');
+            const paymentCtx = document.getElementById('paymentChart')?.getContext('2d');
+            const outOfStockCtx = document.getElementById('outOfStockChart')?.getContext('2d');
+            const favoriteCtx = document.getElementById('favoriteChart')?.getContext('2d');
+
+            // Données pour le graphique des ventes
+            const productNoms = {{ productNoms|raw }};
+            const sales = {{ sales|raw }};
+
+            if (salesCtx && productNoms.length > 0 && sales.length > 0) {
+                new Chart(salesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: productNoms,
+                        datasets: [{
+                            label: 'Nombre de ventes',
+                            data: sales,
+                            backgroundColor: '#db966b',
+                            borderColor: '#e29260',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Données pour le graphique des quantités
+            const productNames = {{ productNames|raw }};
+            const quantities = {{ quantities|raw }};
+
+            if (quantityCtx) {
+                const filteredProducts = productNames.filter((name, index) => quantities[index] > 0);
+                const filteredQuantities = quantities.filter(quantity => quantity > 0);
+
+                if (filteredProducts.length > 0 && filteredQuantities.length > 0) {
+                    new Chart(quantityCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: filteredProducts,
+                            datasets: [{
+                                label: 'Quantité Totale',
+                                data: filteredQuantities,
+                                backgroundColor: [
+                                    '#fcb76e', '#c27b4f', '#f78a36', '#e9a072',
+                                    '#faa666', '#d17942', '#efbf9f', '#e7a273', '#e08548'
+                                ].slice(0, filteredProducts.length),
+                                borderColor: [
+                                    '#fcb76e', '#c27b4f', '#f78a36', '#e9a072',
+                                    '#faa666', '#d17942', '#efbf9f', '#e7a273', '#e08548'
+                                ].slice(0, filteredProducts.length),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(tooltipItem) {
+                                            return tooltipItem.label + ': ' + tooltipItem.raw + ' produits';
+                                        }
+                                    }
+                                }
+                            },
+                            maintainAspectRatio: false
+                        }
+                    });
+                }
+            }
+
+            // Données pour le graphique des paiements
+            const cardPayments = {{ card|default(0) }};
+            const cashPayments = {{ especes|default(0) }};
+
+            if (paymentCtx && (cardPayments > 0 || cashPayments > 0)) {
+                new Chart(paymentCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Carte', 'Espèce'],
+                        datasets: [{
+                            label: 'Répartition des paiements',
+                            data: [cardPayments, cashPayments],
+                            backgroundColor: ['#efbf9f', '#e7a273'],
+                            borderColor: ['#efbf9f', '#e7a273'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        const total = tooltipItem.dataset.data.reduce((sum, value) => sum + value, 0);
+                                        const percentage = (tooltipItem.raw / total * 100).toFixed(2);
+                                        return tooltipItem.label + ': ' + percentage + '%';
+                                    }
+                                }
+                            }
+                        },
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            // Données pour le graphique des produits en rupture de stock
+            const outOfStockProductNames = {{ outOfStockProductNames|raw }};
+
+            if (outOfStockCtx && outOfStockProductNames.length > 0) {
+                new Chart(outOfStockCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: outOfStockProductNames,
+                        datasets: [{
+                            label: 'Produits en rupture de stock',
+                            data: Array(outOfStockProductNames.length).fill(1),
+                            backgroundColor: [
+                               '#e7a273', '#e08548','#fcb76e', '#c27b4f', '#f78a36', '#e9a072',
+                                '#faa666', '#d17942', '#efbf9f'
+                            ].slice(0, outOfStockProductNames.length),
+                            borderColor: '#ffffff',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return tooltipItem.label + ': Rupture de stock';
+                                    }
+                                }
+                            }
+                        },
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            // Données pour le graphique des favoris
+            const favoriteProductNames = {{ favoriteProductNames|raw }};
+            const favoriteProductCounts = {{ favoriteProductCounts|raw }};
+
+            if (favoriteCtx && favoriteProductNames.length > 0 && favoriteProductCounts.length > 0) {
+                new Chart(favoriteCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: favoriteProductNames,
+                        datasets: [{
+                            label: 'Nombre de fois dans les favoris',
+                            data: favoriteProductCounts,
+                            backgroundColor: '#db966b',
+                            borderColor: '#e29260',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    precision: 0
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Nombre de fois dans les favoris'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Produits'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

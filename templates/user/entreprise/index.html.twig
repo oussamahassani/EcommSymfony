@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Entreprise index{% endblock %}
+
+{% block body %}
+    <h1>Entreprise index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Company_name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Tax_code</th>
+                <th>Created_at</th>
+                <th>Supplier</th>
+                <th>Password</th>
+                <th>Field</th>
+                <th>Address.street</th>
+                <th>Address.city</th>
+                <th>Address.postalCode</th>
+                <th>Address.country</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entreprise in entreprises %}
+            <tr>
+                <td>{{ entreprise.id }}</td>
+                <td>{{ entreprise.companyName }}</td>
+                <td>{{ entreprise.email }}</td>
+                <td>{{ entreprise.phone }}</td>
+                <td>{{ entreprise.taxCode }}</td>
+                <td>{{ entreprise.createdAt ? entreprise.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ entreprise.supplier ? 'Yes' : 'No' }}</td>
+                <td>{{ entreprise.password }}</td>
+                <td>{{ entreprise.field }}</td>
+                <td>{{ entreprise.address.street }}</td>
+                <td>{{ entreprise.address.city }}</td>
+                <td>{{ entreprise.address.postalCode }}</td>
+                <td>{{ entreprise.address.country }}</td>
+                <td>
+                    <a href="{{ path('app_entreprise_show', {'id': entreprise.id}) }}">show</a>
+                    <a href="{{ path('app_entreprise_edit', {'id': entreprise.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="14">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_entreprise_new') }}">Create new</a>
+{% endblock %}

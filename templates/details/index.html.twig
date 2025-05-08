@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'article{% endblock %}
+
+{% block body %}
+<section class="product-details spad">
+    <div class="container">
+        {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show popup-message" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+        {% endfor %}
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="product__details__pic">
+                    <div class="product__details__pic__item">
+                        <img class="product__details__pic__item--large" src="{{ asset('uploads/' ~ article.image) }}" alt="{{ article.nom }}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="product__details__text">
+                    <h3>{{ article.nom }}</h3>
+                    <div class="product__details__rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                        <span>(18 reviews)</span>
+                    </div>
+                    <div class="product__details__price">{{ article.prix }} dt</div>
+                    <p>{{ article.description }}</p>
+                    <div class="product__details__quantity">
+                        <div class="quantity">
+                            <div class="pro-qty">
+                                <input type="text" value="{{ article.quantitestock }}">
+                            </div>
+                        </div>
+                    </div>       
+                    <a href="{{ path('add_to_cart', {'id': article.id}) }}" class="primary-btn">Ajouter au panier</a>
+                    <a href="{{ path('add_to_favorites', {'articleId': article.id}) }}" class="primary-btn">Ajouter au favorie</a>
+                    <ul>
+                        <li><b>Catégorie</b>{{ article.category }}<span></span></li>
+                        <li><b>Livraison</b> <span>01 jour de livraison</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        document.getElementById('downloadInvoiceBtn').addEventListener('click', function() {
+            window.print();
+        });
+    </script>
+{% endblock %}

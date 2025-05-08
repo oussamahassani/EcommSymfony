@@ -1,0 +1,29 @@
+{% extends 'baseEntreprise.html.twig' %}
+
+{% block title %}Entreprise{% endblock %}
+{% block page_title %}Lists Entreprises{% endblock %}
+
+{% block content %}
+
+    <h1>Entreprise</h1>
+
+    {% if partners is not empty %}
+    {% for entreprise in partners %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ entreprise.companyName }}</h5>
+                <p class="card-text"><strong>ID:</strong> {{ entreprise.id }}</p>
+                <p class="card-text"><strong>Email:</strong> {{ entreprise.email }}</p>
+                <p class="card-text"><strong>Phone:</strong> {{ entreprise.phone }}</p>
+                <p class="card-text"><strong>Tax Code:</strong> {{ entreprise.taxCode }}</p>
+                <p class="card-text"><strong>Created At:</strong> {{ entreprise.createdAt ? entreprise.createdAt|date('Y-m-d H:i:s') : 'N/A' }}</p>
+                <p class="card-text"><strong>Supplier:</strong> {{ entreprise.supplier ? 'Yes' : 'No' }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p class="text-center">No partners found.</p>
+{% endif %}
+
+    <a href="{{ path('entreprise_dashboard') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Statistiques des ventes{% endblock %}
+
+{% block body %}
+    <div class="card shadow mb-4">
+        <h2>Statistiques des ventes</h2>
+
+        <canvas id="salesChart" class="chart-size"></canvas>
+
+        <h3>Quantité totale des produits</h3>
+        <canvas id="quantityChart" class="chart-size" ></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            const quantityCtx = document.getElementById('quantityChart').getContext('2d');
+
+            // Graphique des ventes (Barres)
+            const productNoms = {{ productNoms|raw }};
+            const sales = {{ sales|raw }};
+            
+            new Chart(salesCtx, {
+                type: 'bar',
+                data: {
+                    labels: productNoms,
+                    datasets: [{
+                        label: 'Nombre de ventes',
+                        data: sales,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Graphique circulaire (Camembert) pour la quantité totale des produits
+            const productNames = {{ productNames|raw }};
+            const quantities = {{ quantities|raw }};
+            
+            new Chart(quantityCtx, {
+                type: 'pie',  // Type du graphique (camembert)
+                data: {
+                    labels: productNames,
+                    datasets: [{
+                        label: 'Quantité Totale',
+                        data: quantities,
+                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'], // Vous pouvez ajouter plus de couleurs
+                        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        });
+    </script>
+{% endblock %}

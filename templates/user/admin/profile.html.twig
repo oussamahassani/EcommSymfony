@@ -1,0 +1,52 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Admin Profile{% endblock %}
+{% block page_title %}Profile{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                            <div class="form-group">
+                                {{ form_label(form.name) }}
+                                {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.name) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.last_name) }}
+                                {{ form_widget(form.last_name, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.last_name) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.email) }}
+                                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.phone) }}
+                                {{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.phone) }}
+                            </div>
+                            <div class="form-group">
+                                <a href="{{ path('admin_change_password') }}" class="btn btn-primary">Change Password</a>
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.imageFile) }}
+                                {{ form_widget(form.imageFile, {'attr': {'class': 'form-control-file'}}) }}
+                                {{ form_errors(form.imageFile) }}
+                                {% if app.user.imagePath %}
+                                    <img src="{{ asset('uploads/' ~ app.user.imagePath) }}" alt="Profile Image" class="img-fluid mt-2" style="max-width: 100px;">
+                                {% endif %}
+                            </div>
+                            {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary'}}) }}
+                            {{ form_end(form) }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

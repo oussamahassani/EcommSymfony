@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Favoris{% endblock %}
+
+{% block body %}
+    <section class="product spad">
+        <div class="container">
+            <!-- Affichage des messages flash -->
+            {% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endfor %}
+
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-lg-3 col-md-5">
+                    <div class="sidebar">
+                       <div class="sidebar">
+                            <div class="blog__sidebar__search">
+                                <form method="GET" action="{{ path('favorie_index') }}">
+                                    <input type="text" name="nom_article" placeholder="Rechercher par nom d'article...">
+                                    <button type="submit"><span class="icon_search"></span></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenu Principal -->
+                <div class="col-lg-9 col-md-7">
+                    <div class="product__discount">
+                        <div class="section-title product__discount__title">
+                            <h2>Vos Favoris</h2>
+                        </div>
+
+                        <div class="row">
+                            {% if favories is not empty %}
+                                {% for favorie in favories %}
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
+                                        <div class="product__item">
+                                            <!-- Image du produit -->
+                                            <div class="product__item__pic set-bg" style="background-image: url('{{ asset('uploads/' ~ favorie.article.image) }}');">
+                                                <ul class="product__item__pic__hover">
+                                                    <li><a href="{{ path('app_details', {'id': favorie.article.id}) }}"><i class="fa fa-retweet"></i></a></li>
+                                                    <li><a href="{{ path('supprimer', { 'id': favorie.id }) }}" ><i class="fa fa-times"></i></a></li>
+                                                    <li><a href="{{ path('add_to_cart', {'id': favorie.article.id}) }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <!-- Informations du produit -->
+                                            <div class="product__item__text">
+                                                <h5>
+                                                    {% if favorie.article is not null %}
+                                                        {{ favorie.article.nom }}
+                                                    {% endif %}
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>Aucun favori trouvé.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

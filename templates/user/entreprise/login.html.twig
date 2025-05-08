@@ -1,0 +1,44 @@
+{#template user/admin/login.html.twig#}
+{% extends 'base.html.twig' %}
+{% block title %}Entreprise Login - AutoLink{% endblock %}
+{% block body %}
+<div class="row justify-content-center align-items-center" style="height: 100vh;">
+    <div class="col-md-6">
+        <div class="form-container">
+            <h2 class="mb-4 text-center font-weight-bold">Entreprise Login</h2>
+            {# Flash messages #}
+            <div class="flash-messages">
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ type }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {# Login form #}
+            {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                
+                <div class="mb-4 form-group">
+                    {{ form_label(form._username, 'Email', {'attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form._username, {'attr': {'class': 'form-control'}}) }}
+                    <div class="form-error">
+                        {{ form_errors(form._username) }}
+                    </div>
+                </div>
+                <div class="mb-4 form-group">
+                    {{ form_label(form._password, 'Password', {'attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form._password, {'attr': {'class': 'form-control'}}) }}
+                    <div class="form-error">
+                        {{ form_errors(form._password) }}
+                    </div>
+                </div>
+                {{ form_widget(form._csrf_token, {'attr': {'class': 'd-none'}}) }}
+                <div class="d-grid">
+                    {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary btn-lg'}}) }}
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

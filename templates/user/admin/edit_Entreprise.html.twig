@@ -1,0 +1,42 @@
+{# user/admin/edit_entreprise.html.twig #}
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Edit Entreprise - Autolink{% endblock %}
+
+{% block page_title %}Edit Entreprise{% endblock %}
+
+{% block content %}
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Edit Entreprise</h6>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(form.company_name, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.tax_code, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.field, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(form.email, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.phone, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form_row(form.submit, { 'attr': {'class': 'btn btn-primary'} }) }}
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome to Autolink!{% endblock %}
+
+{% block body %}
+    <section class="hero">
+        <div class="hero__item set-bg" style="background-image: url('{{ asset('uploads/carousel-2.jpg') }}');">
+            <div class="hero__text">
+                <h1>Bienvenue sur AutoLink</h1>
+                <h3>Recyclage et vente de pièces auto</h3>
+                <a href="#" class="primary-btn">Acheter Produit</a>
+                <a href="#" class="primary-btn">Ajouter Produit</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="product spad">
+        <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="product__discount">
+                    <div class="section-title product__discount__title">
+                        <h2>Nos catégories</h2>
+                    </div>
+                    <div class="product__discount__slider">
+                        <div class="row">
+                            <!-- Carte 1 : Echappement -->
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" style="background-image: url('uploads/echappement.jpg');">
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="{{ path('produits_by_categorie', {'category': 'Echappement'}) }}"><i class="fa fa-retweet"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6>Echappement</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Carte 2 : Electronique -->
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" style="background-image: url('uploads/electrique.jpg');">
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="{{ path('produits_by_categorie', {'category': 'Electronique'}) }}"><i class="fa fa-retweet"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6>Electronique</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Carte 3 :Freinage -->
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" style="background-image: url('uploads/freinage.jpeg');">
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="{{ path('produits_by_categorie', {'category': 'Freinage'}) }}"><i class="fa fa-retweet"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6>Freinage</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Carte 4 : Pièces de carrosserie -->
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" style="background-image: url('uploads/Pièces de carrosserie.jpg');">
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="{{ path('produits_by_categorie', {'category': 'Pièces de carrosserie'}) }}"><i class="fa fa-retweet"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6>Pièces de carrosserie</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+<!-- Services Start -->
+<div class="container-fluid service py-5">
+    <div class="container py-5">
+        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 800px;">
+            <h1 class="display-5 text-capitalize mb-3">Nos <span class="text-primary">Services</span></h1>
+            <p class="mb-0">Découvrez nos services dédiés à l'achat de véhicules recyclés, au recyclage de matériaux, aux ateliers et aux partenariats entre entreprises.</p>
+        </div>
+        <div class="row g-4"> <!-- Ajout de g-4 pour l'espacement -->
+            <div class="col-md-6 col-lg-4 mb-4"> <!-- Ajout de mb-4 pour l'espacement vertical -->
+                <div class="service-item p-4">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-car-alt fa-2x"></i>
+                    </div>
+                    <h5 class="mb-3">Achat de Véhicules Recyclés</h5>
+                    <p class="mb-0">Parcourez notre sélection de voitures recyclées et passez commande en ligne.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="service-item p-4">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-recycle fa-2x"></i>
+                    </div>
+                    <h5 class="mb-3">Recyclage de Matériaux</h5>
+                    <p class="mb-0">Recyclez n'importe quel matériau en suivant notre processus simple et efficace.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="service-item p-4">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-building fa-2x"></i>
+                    </div>
+                    <h5 class="mb-3">Interface Entreprise</h5>
+                    <p class="mb-0">Connectez-vous à votre interface dédiée pour gérer vos partenariats et collaborations.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="service-item p-4">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-handshake fa-2x"></i>
+                    </div>
+                    <h5 class="mb-3">Partenariats</h5>
+                    <p class="mb-0">Établissez des partenariats avec d'autres entreprises pour des projets communs.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="service-item p-4">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-list-alt fa-2x"></i>
+                    </div>
+                    <h5 class="mb-3">Gestion des Commandes</h5>
+                    <p class="mb-0">Suivez et gérez vos commandes de véhicules recyclés en toute simplicité.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="service-item p-4">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-chalkboard-teacher fa-2x"></i>
+                    </div>
+                    <h5 class="mb-3">Ateliers (Workshops)</h5>
+                    <p class="mb-0">Participez à nos ateliers pour apprendre les techniques de recyclage et de réutilisation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Services End -->
+{% endblock %}

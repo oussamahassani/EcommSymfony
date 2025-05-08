@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement{% endblock %}
+
+{% block body %}
+
+
+<div class="container-payment">
+    <!-- Facture -->
+    <div class="col-md-6">
+        <div class="card shadow mt-4">
+            <div class="card-body">
+                <h4 class="text-center">🧾 Facture</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Prix Unitaire</th>
+                            <th>Quantité</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for panier in paniers %}
+                            <tr>
+                                <td>{{ panier.article.nom }}</td>
+                                <td>{{ panier.prixUnitaire|number_format(2, '.', ',') }} dt</td>
+                                <td>{{ panier.quantite }}</td>
+                                <td>{{ (panier.prixUnitaire * panier.quantite)|number_format(2, '.', ',') }} dt</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr>
+                <div><strong>Total HT:</strong> {{ totalHT|number_format(2, '.', ',') }} dt</div>
+                <div><strong>TVA (20%):</strong> {{ tva|number_format(2, '.', ',') }} dt </div>
+                <div><strong>Total TTC:</strong> {{ totalTTC|number_format(2, '.', ',') }} dt</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sélection du paiement -->
+    <div class="right-panel">
+        <h4>Sélectionnez un moyen de paiement :</h4>
+        <a href="{{ path('app_payment', {'showCardModal': 1}) }}" class="btn btn-payment">💳 Carte Bancaire</a>
+        <a href="{{ path('app_payment', {'showCashModal': 1}) }}" class="btn btn-payment">💶 Espèces</a>
+        <a href="{{ path('app_listarticle') }}" class="btn btn-payment">Annuler</a>
+    </div>
+</div>
+
+<!-- Modal Carte Bancaire -->
+{% if showCardModal %}
+<div class="modal show d-block" style="background: rgba(0,0,0,0.5);" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Paiement par Carte Bancaire</h5>
+                <a href="{{ path('app_payment') }}" class="btn-close" aria-label="Close">✖</a>
+            </div>
+            <div class="modal-body">
+                <form id="payment-form" action="{{ path('app_payment') }}" method="POST">
+                    <input type="hidden" name="payment_method" value="card">
+
+                    <!-- Card Element Placeholder -->
+                    <div class="mb-3">
+                        <label class="form-label">Numéro de Carte</label>
+                        <div id="card-element"></div> <!-- Stripe's Card Element -->
+                    </div>
+
+                    <!-- Card Holder Name (for billing purposes) -->
+                    <div class="mb-3">
+                        <label class="form-label" for="card_holder">Titulaire de la Carte</label>
+                        <input type="text" class="form-control" id="card_holder" placeholder="Nom Prénom" name="card_holder" required>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button id="submit-button" type="submit" class="btn btn-payment">Confirmer le Paiement</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Modal Espèces -->
+{% if showCashModal %}
+<div class="modal show d-block" style="background: rgba(0,0,0,0.5);" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Paiement en Espèces</h5>
+                <a href="{{ path('app_payment') }}" class="btn-close">✖</a>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ path('app_payment') }}">
+                    <input type="hidden" name="payment_method" value="especes">
+                    <div class="row">
+                        <div class="col mb-6">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" class="form-control" placeholder="Prénom" value="{{ app.user.Name }}" name="name" required>
+                        </div>
+                        <div class="col mb-6">
+                            <label class="form-label">Nom</label>
+                            <input type="text" class="form-control" placeholder="Nom" value="{{ app.user.lastName }}" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Numéro de Téléphone</label>
+                        <input type="text" class="form-control" placeholder="Votre numéro" value="{{ app.user.phone}}" name="phone" required>
+                    </div>
+                    <button type="submit" class="btn btn-payment">Confirmer le Paiement</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% for message in app.flashes('error') %}
+    <div class="modal show d-block" style="background: rgba(0,0,0,0.5);" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Erreur</h5>
+                    <a href="{{ path('app_payment') }}" class="btn-close">✖</a>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+{% for message in app.flashes('success') %}
+    <div class="modal show d-block" style="background: rgba(0,0,0,0.5);" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Succès</h5>
+                    <a href="{{ path('app_listarticle') }}" class="btn-close">✖</a>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+<script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+var stripe = Stripe('pk_test_51QtZAG08XEhYzXSHrbpvQ4kVHCvw42SkuF6fUp9ezUXf79xJdVJTrKnbgDuqmJOpeWquA0YCW3TzrbUHxhSJVbCY00nbvOAtBh');
+var elements = stripe.elements();
+var card = elements.create('card');
+card.mount('#card-element');  // Make sure this matches the ID in your HTML
+
+console.log( "fdssfdyf"); // Check the result object in the console
+// Listen for form submission
+var form = document.getElementById('payment-form');
+form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Create the token using Stripe.js
+    stripe.createToken(card).then(function(result) {
+        if (result.error) {
+            // Handle the error (show message to the user)
+            alert(result.error.message);
+        } else {
+            // Attach the token to the form and submit
+            var tokenInput = document.createElement('input');
+            tokenInput.setAttribute('type', 'hidden');
+            tokenInput.setAttribute('name', 'stripeToken');
+            tokenInput.setAttribute('value', result.token.id);  // The token ID
+            form.appendChild(tokenInput);
+
+            // Submit the form now that the token is included
+            form.submit();
+        }
+    });
+});
+</script>
+
+{% endblock %}

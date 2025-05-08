@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'article{% endblock %}
+
+{% block body %}
+<section class="product-details spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="product__details__pic">
+                    <div class="product__details__pic__item">
+                        <img class="product__details__pic__item--large" src="{{ asset('uploads/Facture2.png' ) }}" alt="Image Facture">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="product__details__text">
+                    <h3>Facture N° {{ facture.id }}</h3>
+                    <div class="product__details__rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                        <span>(18 reviews)</span>
+                    </div>
+                    <div class="product__details__price">
+                        <b>Total Facture :</b> {{ facture.montant|number_format(2, ',', ' ') }} dt
+                    </div>
+
+                    <p>
+                        <b>Date de la Facture :</b> {{ facture.datetime|date('d/m/Y') }} <br>
+                        <b>mode de Paiement :</b> {{ facture.commande.modePaiement }}
+                    </p>
+                    
+
+                    <div class="order-details">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Quantité</th>
+                                    <th>Prix Unitaire</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for article in articles %}
+                                    <tr>
+                                        <td>{{ article.nom }}</td>
+                                        <td>{{ article.quantite }}</td> <!-- Affichage de la quantité -->
+                                        <td>{{ article.prix|number_format(2, ',', ' ') }} dt</td>
+                                    </tr>
+                                {% else %}
+                                    <tr><td colspan="4">Aucun article trouvé.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button onclick="window.location.href='{{ path('facture_telecharger_pdf_from_json', {'id': facture.id}) }}'" class="btn btn-danger">
+                        <i class="fa fa-file-pdf"></i> Télécharger Facture
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% for message in app.flashes('success') %}
+    <div class="modal show d-block popup-message" style="background: rgba(0,0,0,0.5);" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="{{ path('app_details') }}" class="btn-close">✖</a>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}

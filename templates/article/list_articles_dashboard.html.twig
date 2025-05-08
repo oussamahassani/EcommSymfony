@@ -1,0 +1,214 @@
+{% extends 'baseAdmin.html.twig' %}
+{% block title %}Products for Selling{% endblock %}
+{% block page_title %}Products for Selling{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Product List</h6>
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#addProductModal">Add Product</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="productTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Image</th>
+                            <th>Creation Date</th>
+                            <th>Stock</th>
+                            <th>Category</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in articles %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.nom }}</td>
+                            <td>{{ product.description }}</td>
+                            <td>{{ product.prix }} TND</td>
+                            <td>
+                                <img src="{{ asset('uploads/' ~ product.image) }}" alt="Product Image" width="50">
+                            </td>
+                            <td>{{ product.datecreation|date('Y-m-d H:i:s') }}</td>
+                            <td>{{ product.quantitestock }}</td>
+                            <td>{{ product.category }}</td>
+                            <td>
+                                <a href="{{ path('edit_article_admin', { 'id': product.id }) }}" class="btn btn-primary btn-sm">Edit</a>
+                                    <a href="{{ path('delete_article_admin', { 'id': product.id }) }}" onclick="return confirm('Are you sure you want to delete this Product?');" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if currentPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('list_articles_admin', {'page': currentPage - 1}) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in 1..pagesCount %}
+                        <li class="page-item {{ (i == currentPage) ? 'active' : '' }}">
+                            <a class="page-link" href="{{ path('list_articles_admin', {'page': i}) }}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if currentPage < pagesCount %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('list_articles_admin', {'page': currentPage + 1}) }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{{ path('list_articles_admin') }}" enctype="multipart/form-data" novalidate>
+                    {{ form_start(form) }}
+                    <div class="form-group">
+                        {{ form_label(form.nom) }}
+                        {{ form_widget(form.nom, {'attr': {'class': 'form-control ' ~ (form_errors(form.nom) ? 'is-invalid' : '')}}) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.nom) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control ' ~ (form_errors(form.description) ? 'is-invalid' : '')}}) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.description) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.prix) }}
+                        {{ form_widget(form.prix, {'attr': {'class': 'form-control ' ~ (form_errors(form.prix) ? 'is-invalid' : '')}}) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.prix) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.image) }}
+                        {{ form_widget(form.image, {'attr': {'class': 'form-control ' ~ (form_errors(form.image) ? 'is-invalid' : '')}}) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.image) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.quantitestock) }}
+                        {{ form_widget(form.quantitestock, {'attr': {'class': 'form-control ' ~ (form_errors(form.quantitestock) ? 'is-invalid' : '')}}) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.quantitestock) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.category) }}
+                        {{ form_widget(form.category, {'attr': {'class': 'form-control ' ~ (form_errors(form.category) ? 'is-invalid' : '')}}) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.category) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.submit, { 'attr': {'class': 'btn btn-primary'} }) }}
+                    </div>
+                    {{ form_end(form) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% if formErrors %}
+            $('#addProductModal').modal('show'); // Ouvre la popup si erreurs
+        {% endif %}
+    });
+</script>
+
+
+{% endblock %}
+{% block stylesheets %}
+    <style>
+        /* Styles spécifiques pour le tableau des commandes */
+        #productTable {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #productTable th {
+            background-color:rgb(210, 196, 182);
+            color: #ffffff;
+            text-align: left;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        #productTable td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #productTable tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        #productTable ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        #productTable ul li {
+            font-size: 13px;
+        }
+
+        /* Pagination stylisée */
+        .pagination .page-item .page-link {
+            color:rgb(199, 124, 43);
+            border-radius: 4px;
+            margin: 0 2px;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color:rgb(199, 124, 43);
+            border-color:rgb(199, 124, 43);
+            color: white;
+        }
+
+       .pagination .page-item .page-link:hover {
+            background-color:rgb(199, 124, 43);
+            color: white;
+        }
+
+    </style>
+{% endblock %}
+    

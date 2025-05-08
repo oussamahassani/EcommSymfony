@@ -1,0 +1,113 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}List of Recyclable Materials{% endblock %}
+
+{% block page_title %}List of Recyclable Materials{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Recyclable Materials</h6>
+                    <!-- Add New Material Button -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMaterialModal">
+                        Add New Material
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Type of Material</th>
+                                    <th>Image</th>
+                                    <th>Status</th>
+                                    <th>Enterprise</th>
+                                    <th>User</th>
+                                    <th>Date of Creation</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for materiel in materiels %}
+                                    <tr>
+                                        <td>{{ materiel.id }}</td>
+                                        <td>{{ materiel.name }}</td>
+                                        <td>{{ materiel.description }}</td>
+                                        <td>{{ materiel.typeMateriel }}</td>
+                                        <td>
+                                            {% if materiel.image %}
+                                                <img src="{{ asset('uploads/' ~ materiel.image) }}" alt="{{ materiel.name }}" width="50" height="50">
+                                            {% else %}
+                                                No Image
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ materiel.statut.getName() }}</td>
+                                        <td>{{ materiel.entreprise.companyName }}</td>
+                                        <td>{{ materiel.user.name }} {{ materiel.user.lastName }}</td>
+                                        <td>{{ materiel.datecreation|date('Y-m-d H:i:s') }}</td>
+                                        <td>
+                                            <a href="{{ path('edit_material_admin', {'id': materiel.id}) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            <a href="{{ path('delete_material_admin', {'id': materiel.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this material?')">Delete</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add New Material Form Modal -->
+    <div class="modal fade" id="addMaterialModal" tabindex="-1" role="dialog" aria-labelledby="addMaterialModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addMaterialModalLabel">Add Recyclable Material</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ path('list_materials_admin') }}" enctype="multipart/form-data" novalidate>
+                        {{ form_start(form) }}
+                        <div class="form-group">
+                            {{ form_label(form.name) }}
+                            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.description) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.typemateriel) }}
+                            {{ form_widget(form.typemateriel, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.typemateriel) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.image) }}
+                            {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.image) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.entreprise) }}
+                            {{ form_widget(form.entreprise, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.entreprise) }}
+                        <div class="form-group">
+                            {{ form_row(form.submit, { 'attr': {'class': 'btn btn-primary'} }) }}
+                        </div>
+                        {{ form_end(form) }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{# templates/user/login.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Connexion - AutoLink{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .create-account-link:hover {
+            color: black; /* Change color to black on hover */
+        }
+    </style>
+{% endblock %}
+{% block body %}
+<div class="row justify-content-center align-items-center" style="height: 100vh;">
+    <div class="col-md-6">
+        <div class="form-container">
+            <h2 class="mb-4 text-center font-weight-bold">Connexion</h2>
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                
+                <div class="mb-4 form-group">
+                    {{ form_label(form._username, 'Email', {'attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form._username, {'attr': {'class': 'form-control'}}) }}
+                    <div class="form-error">
+                        {{ form_errors(form._username) }}
+                    </div>
+                </div>
+                <div class="mb-4 form-group">
+                    {{ form_label(form._password, 'Password', {'attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form._password, {'attr': {'class': 'form-control'}}) }}
+                    <div class="form-error">
+                        {{ form_errors(form._password) }}
+                    </div>
+                </div>
+                <div class="d-grid">
+                    {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary btn-lg'}}) }}
+                </div>
+            {{ form_end(form) }}
+            {# Create account link #}
+            <div class="text-center mt-4">
+                <p class="mb-0">New to AutoLink? <a href="{{ path('create_account') }}" class="create-account-link">Create account</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

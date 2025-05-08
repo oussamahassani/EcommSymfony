@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le Produit Recyclable{% endblock %}
+
+{% block body %}
+<div class="py-5">
+    <div class="container">
+        <h2 class="text-center text-primary">Modifier le Produit Recyclable</h2>
+        
+        <div class="bg-light p-4 rounded shadow"> 
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="p-4 border rounded">
+                        <h3 class="text-success">
+                            <i class="fa fa-edit mr-2"></i>Détails du Produit
+                        </h3>
+
+                        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+                        <div class="form-group">
+                            {{ form_label(form.name) }}
+                            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.description) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.typemateriel) }}
+                            {{ form_widget(form.typemateriel, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.typemateriel) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.image) }}
+                            {{ form_widget(form.image) }}
+                            {{ form_errors(form.image) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.entreprise) }}
+                            {{ form_widget(form.entreprise, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.entreprise) }}
+                        <div class="form-group">
+                            {{ form_row(form.submit, { 'attr': {'class': 'btn btn-primary'} }) }}
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
